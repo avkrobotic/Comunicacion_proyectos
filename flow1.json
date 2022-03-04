@@ -1,0 +1,191 @@
+[
+    {
+        "id": "6a471e57293af2db",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "9e3e5732ba086f97",
+        "type": "inject",
+        "z": "6a471e57293af2db",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 160,
+        "wires": [
+            [
+                "6f67d529940d145f"
+            ]
+        ]
+    },
+    {
+        "id": "6f67d529940d145f",
+        "type": "openweathermap",
+        "z": "6a471e57293af2db",
+        "name": "Tiempo_actual_ALC",
+        "wtype": "current",
+        "lon": "",
+        "lat": "",
+        "city": "Alicante",
+        "country": "Spain",
+        "language": "es",
+        "x": 280,
+        "y": 160,
+        "wires": [
+            [
+                "bad0a0d02fbf9b8d",
+                "62214e706521dbc0",
+                "cd85257b7547b3ba"
+            ]
+        ]
+    },
+    {
+        "id": "a2b820820188fc71",
+        "type": "ui_gauge",
+        "z": "6a471e57293af2db",
+        "name": "Temperatura en alicante",
+        "group": "152ba2d87311d9ff",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temp",
+        "label": "ºC",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "30",
+        "colors": [
+            "#204a87",
+            "#edd400",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 730,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "f5d61ce150dc4ee2",
+        "type": "debug",
+        "z": "6a471e57293af2db",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "cd85257b7547b3ba",
+        "type": "function",
+        "z": "6a471e57293af2db",
+        "name": "f_tempc_gauge",
+        "func": "msg.payload=msg.payload.tempc;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 260,
+        "wires": [
+            [
+                "a2b820820188fc71",
+                "f5d61ce150dc4ee2"
+            ]
+        ]
+    },
+    {
+        "id": "bad0a0d02fbf9b8d",
+        "type": "debug",
+        "z": "6a471e57293af2db",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "8a7edbddf8937e21",
+        "type": "debug",
+        "z": "6a471e57293af2db",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "62214e706521dbc0",
+        "type": "function",
+        "z": "6a471e57293af2db",
+        "name": "",
+        "func": "if(msg.payload.weather == \"clear\"){\n    msg.payload = \"BUEN TIEMPO\"\n}\nelse{\n    msg.payload = \"MAL TIEMPO\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 160,
+        "wires": [
+            [
+                "8a7edbddf8937e21"
+            ]
+        ]
+    },
+    {
+        "id": "152ba2d87311d9ff",
+        "type": "ui_group",
+        "name": "Primer_Dashboard",
+        "tab": "797aa633787ed095",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "797aa633787ed095",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

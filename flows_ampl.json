@@ -1,0 +1,432 @@
+[
+    {
+        "id": "ec2cf694759c4cc9",
+        "type": "tab",
+        "label": "Flow 5",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ef9e4442c51505cf",
+        "type": "telegram receiver",
+        "z": "ec2cf694759c4cc9",
+        "name": "",
+        "bot": "1b4cd5ec4c4004a0",
+        "saveDataDir": "",
+        "filterCommands": true,
+        "x": 110,
+        "y": 40,
+        "wires": [
+            [
+                "5bf6173b2d5bb6b9"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "5bf6173b2d5bb6b9",
+        "type": "switch",
+        "z": "ec2cf694759c4cc9",
+        "name": "",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "hola",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "?",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "?",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "payload.content",
+                "vt": "msg"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 4,
+        "x": 290,
+        "y": 40,
+        "wires": [
+            [
+                "82d09f8ccdcd297a",
+                "2eeaf237a5acbc4f"
+            ],
+            [
+                "09b48a384ba10cb6"
+            ],
+            [
+                "6059a205ef555d28"
+            ],
+            [
+                "2eeaf237a5acbc4f"
+            ]
+        ]
+    },
+    {
+        "id": "82d09f8ccdcd297a",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "f_hola",
+        "func": "msg.payload={\n    \"chatId\": 1661239683,\n    \"type\": \"message\",\n    \"content\": \"Bienvenido \\nPruebe alguna de nuestras opciones\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 20,
+        "wires": [
+            [
+                "7bcb61e9f7775599"
+            ]
+        ]
+    },
+    {
+        "id": "28e8d9792fbbeaf2",
+        "type": "telegram sender",
+        "z": "ec2cf694759c4cc9",
+        "name": "",
+        "bot": "1b4cd5ec4c4004a0",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 970,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "abb0c75805d26262",
+        "type": "http request",
+        "z": "ec2cf694759c4cc9",
+        "name": "http openw",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "api.openweathermap.org/data/2.5/weather?q={{payload}}&units=metric&appid=51524f9a11e8dd39ca9de77e2b91aa78",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 610,
+        "y": 100,
+        "wires": [
+            [
+                "947fca20cb7eb966"
+            ]
+        ]
+    },
+    {
+        "id": "947fca20cb7eb966",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "alc_temp",
+        "func": "msg.payload={\n    \"chatId\": 1661239683,\n    \"type\": \"message\",\n    \"content\": \"La temperatura de actual en Alicante es de \"+msg.payload.main.temp\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 100,
+        "wires": [
+            [
+                "7bcb61e9f7775599"
+            ]
+        ]
+    },
+    {
+        "id": "5045d57dae2295fd",
+        "type": "http request",
+        "z": "ec2cf694759c4cc9",
+        "name": "http hora",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://worldtimeapi.org/api/timezone/Europe/Madrid",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 460,
+        "y": 300,
+        "wires": [
+            [
+                "9433472c8066db4e"
+            ]
+        ]
+    },
+    {
+        "id": "9433472c8066db4e",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "f_hora",
+        "func": "switch(msg.payload.day_of_week){\n    case 1:\n        dia_sem = \"lunes\";\n    break;\n    case 2:\n        dia_sem = \"martes\";\n    break;\n    case 3:\n        dia_sem = \"miércoles\";\n    break;\n    case 4:\n        dia_sem = \"jueves\";\n    break;\n    case 5:\n        dia_sem = \"viernes\";\n    break;\n    case 6:\n        dia_sem = \"sábado\";\n    break;\n    case 7:\n        dia_sem = \"domingo\";\n    break;\n}\n\nabrev =msg.payload.abbreviation;\n\n\nhora0 = msg.payload.datetime.substr(11);\nhora = hora0.substring(0, hora0.length -13);\n\nmsg.payload={\n    \"chatId\": 1661239683,\n    \"type\": \"message\",\n    \"content\": \"Estás en el huso horario \" + abrev +\". Son las \" + hora + \" y estamos a \" + dia_sem\n}\nreturn msg;\n\n//msg.payload = dia_sem;\n//msg.payload = \"En huso horario\"+ abrev+ \" estamos a\";\n//msg.payload = \"En huso horario\" abrev+ \" estamos a\" dia_sem+ \"y son las\" msg.payload.datetime;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 300,
+        "wires": [
+            [
+                "28e8d9792fbbeaf2"
+            ]
+        ]
+    },
+    {
+        "id": "7b2d61416e86e08d",
+        "type": "telegram command",
+        "z": "ec2cf694759c4cc9",
+        "name": "",
+        "command": "/hora",
+        "description": "",
+        "registercommand": false,
+        "language": "",
+        "scope": "default",
+        "bot": "1b4cd5ec4c4004a0",
+        "strict": false,
+        "hasresponse": true,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 2,
+        "x": 70,
+        "y": 300,
+        "wires": [
+            [
+                "5045d57dae2295fd"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "3a38f4a4923c3937",
+        "type": "telegram event",
+        "z": "ec2cf694759c4cc9",
+        "name": "",
+        "bot": "1b4cd5ec4c4004a0",
+        "event": "edited_message",
+        "autoanswer": false,
+        "x": 100,
+        "y": 240,
+        "wires": [
+            [
+                "a58873bd91c21c0a"
+            ]
+        ]
+    },
+    {
+        "id": "7bcb61e9f7775599",
+        "type": "telegram sender",
+        "z": "ec2cf694759c4cc9",
+        "name": "",
+        "bot": "1b4cd5ec4c4004a0",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 970,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "09b48a384ba10cb6",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "f_alicante",
+        "func": "msg.payload = \"Alicante\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 100,
+        "wires": [
+            [
+                "abb0c75805d26262"
+            ]
+        ]
+    },
+    {
+        "id": "2eeaf237a5acbc4f",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "f_otros",
+        "func": "msg.payload={\n    \"chatId\": 1661239683,\n    \"type\": \"message\",\n    \"content\": \"para más información utilice el comando /help\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 60,
+        "wires": [
+            [
+                "7bcb61e9f7775599"
+            ]
+        ]
+    },
+    {
+        "id": "a58873bd91c21c0a",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "f_enfado",
+        "func": "msg.payload={\n    \"chatId\": 1661239683,\n    \"type\": \"sticker\",\n    \"content\": \"CAACAgIAAxkBAAPJYiJ30f6DCBKhA8lRlt7KTDh22NIAAhoAA8A2TxOC27C1PAZBVyME\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 240,
+        "wires": [
+            [
+                "28e8d9792fbbeaf2"
+            ]
+        ]
+    },
+    {
+        "id": "6059a205ef555d28",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "f_ciudad",
+        "func": "ciudad = msg.payload.content.substr(1);\nmsg.payload = ciudad;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 140,
+        "wires": [
+            [
+                "f6bcc6d21e031a1f"
+            ]
+        ]
+    },
+    {
+        "id": "a6ff0a9a66b8ac04",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "ciudad_temp",
+        "func": "msg.payload={\n    \"chatId\": 1661239683,\n    \"type\": \"message\",\n    \"content\": \"La temperatura de actual en la nueva ciudad es de \"+msg.payload.main.temp\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 140,
+        "wires": [
+            [
+                "7bcb61e9f7775599"
+            ]
+        ]
+    },
+    {
+        "id": "f6bcc6d21e031a1f",
+        "type": "http request",
+        "z": "ec2cf694759c4cc9",
+        "name": "http openw",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "api.openweathermap.org/data/2.5/weather?q={{payload}}&units=metric&appid=51524f9a11e8dd39ca9de77e2b91aa78",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 610,
+        "y": 140,
+        "wires": [
+            [
+                "a6ff0a9a66b8ac04"
+            ]
+        ]
+    },
+    {
+        "id": "257b351855f8ba09",
+        "type": "telegram command",
+        "z": "ec2cf694759c4cc9",
+        "name": "",
+        "command": "/help",
+        "description": "",
+        "registercommand": false,
+        "language": "",
+        "scope": "default",
+        "bot": "1b4cd5ec4c4004a0",
+        "strict": false,
+        "hasresponse": true,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 2,
+        "x": 70,
+        "y": 360,
+        "wires": [
+            [
+                "0d15ae53fa4e4344"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "0d15ae53fa4e4344",
+        "type": "function",
+        "z": "ec2cf694759c4cc9",
+        "name": "f_help",
+        "func": "textaco = \"asdf\";\n\nmsg.payload={\n    \"chatId\": 1661239683,\n    \"type\": \"message\",\n    \"content\": \"/hora : te muestra la hora y el día de la semana. \\nADVERTENCIA, el bot se enfada si editas uno de tus mensajes enviados. \\n'?': ¿Te gustaría saber cuál es la temperatura en Alicante? \\n'?'+nueva_ciudad: Prueba a averiguar la temperatura de cualquier ciudad del mundo. \\n'hola': Lo primero es saludarse. Te puede ayudar si lo haces. \\nSi escribes cualquier otra cosa, también intentará ayudarte.\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 360,
+        "wires": [
+            [
+                "28e8d9792fbbeaf2"
+            ]
+        ]
+    },
+    {
+        "id": "1b4cd5ec4c4004a0",
+        "type": "telegram bot",
+        "botname": "Com_NodeRedBot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    }
+]
